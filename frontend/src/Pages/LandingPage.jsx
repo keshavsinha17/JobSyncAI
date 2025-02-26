@@ -13,8 +13,8 @@ const LandingPage = () => {
                             <div class="hidden md:block">
                                 <div class="flex items-center space-x-8">
                                     <a href="#features" class="text-gray-300 hover:text-white">Features</a>
-                                    <a href="#testimonials" class="text-gray-300 hover:text-white">Testimonials</a>
-                                    <a href="#faq" class="text-gray-300 hover:text-white">FAQ</a>
+                                    {/* <a href="#testimonials" class="text-gray-300 hover:text-white">Testimonials</a> */}
+                                    {/* <a href="#faq" class="text-gray-300 hover:text-white">FAQ</a> */}
                                     <button class="!rounded-button bg-custom text-white px-6 py-2 font-medium">Join Waitlist</button>
                                 </div>
                             </div>
@@ -109,7 +109,7 @@ const LandingPage = () => {
                                 </div>
                                 <div class="bg-gray-800 rounded-lg p-8">
                                     <div class="flex items-center mb-6">
-                                        <img src="https://creatie.ai/ai/api/search-image?query=A professional headshot of a middle-aged male professional with glasses, wearing a business suit, against a neutral background&width=100&height=100&orientation=squarish&flag=69ee5e76-ec38-4ded-b200-9222a275b043&flag=f3eaffec-c64a-4e2b-a6fb-eaf0e72651ed" alt="Michael" class="w-12 h-12 rounded-full mr-4" />
+                                        <img src="https://www.google.com/imgres?q=professional%20images&imgurl=https%3A%2F%2Fwww.shutterstock.com%2Fimage-photo%2Fsmiling-young-middle-eastern-man-260nw-2063524544.jpg&imgrefurl=https%3A%2F%2Fwww.shutterstock.com%2Fsearch%2Fprofessional&docid=L8ezkVWlICHo0M&tbnid=PTH7hlSZRxfUOM&vet=12ahUKEwiw38PzheCLAxWRZWwGHd8bFYUQM3oECHMQAA..i&w=390&h=280&hcb=2&ved=2ahUKEwiw38PzheCLAxWRZWwGHd8bFYUQM3oECHMQAA" alt="Michael" class="w-12 h-12 rounded-full mr-4" />
                                         <div>
                                             <h4 class="font-bold">Michael Chen</h4>
                                             <p class="text-gray-400">Product Manager</p>
@@ -168,7 +168,7 @@ const LandingPage = () => {
                                 <ul class="space-y-2 text-gray-400">
                                     <li><a href="#" class="hover:text-white">Features</a></li>
                                     <li><a href="#" class="hover:text-white">Pricing</a></li>
-                                    <li><a href="#" class="hover:text-white">Security</a></li>
+                                    {/* <li><a href="#" class="hover:text-white">Security</a></li> */}
                                 </ul>
                             </div>
                             <div>
@@ -176,7 +176,7 @@ const LandingPage = () => {
                                 <ul class="space-y-2 text-gray-400">
                                     <li><a href="#" class="hover:text-white">About</a></li>
                                     <li><a href="#" class="hover:text-white">Blog</a></li>
-                                    <li><a href="#" class="hover:text-white">Careers</a></li>
+                                    {/* <li><a href="#" class="hover:text-white">Careers</a></li> */}
                                 </ul>
                             </div>
                             <div>

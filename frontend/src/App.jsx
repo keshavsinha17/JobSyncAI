@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import './App.css'
-import JobApplicationTracker from './Pages/Dashboard'
+
+import LandingPage from './Pages/LandingPage'
+import Dashboard from './Pages/Dashboard'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -8,7 +10,9 @@ function App() {
   return (
     <>
       {/* <JobApplicationTracker/> */}
+      {/* <Dashboard/> */}
       {/* //fix this either creatie or otherwise */}
+      <LandingPage/>
     </>
   )
 }
