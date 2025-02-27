@@ -1,10 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import { googleAuth } from "../api.js";
 import { useNavigate } from "react-router-dom";
 
 const Login = ({ setIsAuthenticated }) => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user is already authenticated
+    const userInfo = localStorage.getItem("user-info");
+    const token = localStorage.getItem("token");
+    if (userInfo && token) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [navigate]);
 
   const responseGoogle = async (authResult) => {
     try {
@@ -19,7 +28,7 @@ const Login = ({ setIsAuthenticated }) => {
           setIsAuthenticated(true);
           
           // Redirect to dashboard
-          navigate("/dashboard");
+          navigate("/dashboard", { replace: true });
         } else {
           console.error("Login failed:", result);
         }

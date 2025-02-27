@@ -8,14 +8,19 @@ import RefreshHandler from './Components/RefreshHandler'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const userInfo = localStorage.getItem("user-info");
     const token = localStorage.getItem("token");
     setIsAuthenticated(!!(userInfo && token));
+    setIsLoading(false);
   }, []);
 
   const GoogleAuthWrapper = () => {
+    if (isAuthenticated) {
+      return <Navigate to="/dashboard" replace />;
+    }
     return (
       <GoogleOAuthProvider clientId="125166014448-09633mpn1l85bkv9f21meq1r0rl3qlnh.apps.googleusercontent.com">
         <Login setIsAuthenticated={setIsAuthenticated} />
@@ -24,17 +29,30 @@ function App() {
   };
   
   const ProtectedRoute = ({ element }) => {
-    const userInfo = localStorage.getItem("user-info");
-    const token = localStorage.getItem("token");
-    return userInfo && token ? element : <Navigate to="/login" />;
+    if (isLoading) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      );
+    }
+    return isAuthenticated ? element : <Navigate to="/login" replace />;
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <BrowserRouter>
       <RefreshHandler setIsAuthenticated={setIsAuthenticated}/>
       <Routes>
         <Route path="/login" element={<GoogleAuthWrapper />} />
-        <Route path="/" element={<Navigate to="/login" />}/>
+        <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />} />
         <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard2 />} />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
