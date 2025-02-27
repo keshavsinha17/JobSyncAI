@@ -4,5 +4,5 @@ const router = Router();
 router.get("/", (req, res) => {
     res.send("hello world this is server");
 })
-router.post("/google-login", googleLogin)
+router.get("/google", googleLogin)
 export default router
