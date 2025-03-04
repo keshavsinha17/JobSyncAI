@@ -5,6 +5,7 @@ import Login from './Components/Login'
 import PageNotFound from './Pages/PageNotFound'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import RefreshHandler from './Components/RefreshHandler'
+import AddJob from './Components/AddJob'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -54,6 +55,7 @@ function App() {
         <Route path="/login" element={<GoogleAuthWrapper />} />
         <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />} />
         <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard2 />} />} />
+        <Route path="/add-job" element={<ProtectedRoute element={<AddJob />} />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
