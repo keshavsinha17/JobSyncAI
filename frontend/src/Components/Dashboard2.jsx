@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import JobCard from "./JobCard";
 
 const Dashboard2 = () => {
     const [user, setUser] = useState(null);
+    const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
@@ -15,18 +18,35 @@ const Dashboard2 = () => {
                 return;
             }
             setUser(JSON.parse(data));
+            fetchJobs();
         } catch (error) {
             console.error("Error loading user data:", error);
             navigate("/login");
         } finally {
             setLoading(false);
         }
-    }, []); // Empty dependency array means this runs once on mount
+    }, [navigate]);
 
-    const handleLogout = () => {
-        localStorage.removeItem("user-info");
-        localStorage.removeItem("token");
-        navigate("/login");
+    const fetchJobs = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get('http://localhost:3000/api/jobs/my-jobs', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setJobs(response.data.data);
+        } catch (error) {
+            console.error('Error fetching jobs:', error);
+        }
+    };
+
+    const handleJobUpdate = (updatedJob) => {
+        setJobs(jobs.map(job => 
+            job._id === updatedJob._id ? updatedJob : job
+        ));
+    };
+
+    const handleJobDelete = (jobId) => {
+        setJobs(jobs.filter(job => job._id !== jobId));
     };
 
     if (loading) {
@@ -47,31 +67,41 @@ const Dashboard2 = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 p-8">
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-6xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-                    <button
-                        onClick={handleLogout}
-                        className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
-                    >
-                        Sign Out
-                    </button>
+        <div>
+                        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+                        <p className="text-gray-600">Welcome, {user.name}</p>
+                    </div>
+                    <div className="flex space-x-4">
+                        <button
+                            onClick={() => navigate('/add-job')}
+                            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+                        >
+                            Add New Job
+                        </button>
+                        <button
+                            onClick={() => {
+                                localStorage.removeItem("user-info");
+                                localStorage.removeItem("token");
+                                navigate("/login");
+                            }}
+                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+                        >
+                            Sign Out
+                        </button>
+                    </div>
                 </div>
 
-                <div className="bg-white shadow rounded-lg p-6">
-                    <div className="flex items-center space-x-6">
-                        {user.image && (
-                            <img 
-                                src={user.image} 
-                                alt="Profile" 
-                                className="w-20 h-20 rounded-full border-2 border-gray-200"
-                            />
-                        )}
-        <div>
-                            <h2 className="text-2xl font-semibold text-gray-900">{user.name}</h2>
-                            <p className="text-gray-600">{user.email}</p>
-                        </div>
-                    </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {jobs.map(job => (
+                        <JobCard
+                            key={job._id}
+                            job={job}
+                            onUpdate={handleJobUpdate}
+                            onDelete={handleJobDelete}
+                        />
+                    ))}
                 </div>
             </div>
         </div>
