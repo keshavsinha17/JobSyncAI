@@ -11,7 +11,10 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors({
-    origin: "http://localhost:5173", // Assuming your frontend runs on Vite's default port
+    origin: [
+        "http://localhost:5173",
+        "chrome-extension://*" // Allow requests from Chrome extension
+    ],
     credentials: true
 }));
 
