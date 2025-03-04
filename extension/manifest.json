@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "JobSyncAI",
+  "version": "1.0",
+  "description": "Track your job applications across different platforms",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://*.linkedin.com/*",
+    "https://*.indeed.com/*",
+    "https://*.glassdoor.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/globe.png",
+      "48": "icons/globe.png",
+      "128": "icons/globe.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.linkedin.com/*jobs*",
+        "https://*.linkedin.com/jobs/*",
+        "https://www.linkedin.com/jobs/view/*",
+        "https://*.indeed.com/*",
+        "https://*.glassdoor.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

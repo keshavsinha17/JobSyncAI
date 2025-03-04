@@ -47,18 +47,18 @@ function App() {
       </div>
     );
   }
-
+  
   return (
-    <BrowserRouter>
+<BrowserRouter>
       <RefreshHandler setIsAuthenticated={setIsAuthenticated}/>
-      <Routes>
-        <Route path="/login" element={<GoogleAuthWrapper />} />
+  <Routes>
+  <Route path="/login" element={<GoogleAuthWrapper />} />
         <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />} />
         <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard2 />} />} />
         <Route path="/add-job" element={<ProtectedRoute element={<AddJob />} />} />
         <Route path="*" element={<PageNotFound />} />
-      </Routes>
-    </BrowserRouter>
+  </Routes>
+</BrowserRouter>
   );
 }
 
