@@ -71,7 +71,7 @@ const Dashboard2 = () => {
                 <div className="flex justify-between items-center mb-8">
         <div>
                         <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-                        <p className="text-gray-600">Welcome, {user.name}</p>
+                        <p className="text-gray-600">Welcome, {user.name.toUpperCase()}</p>
                     </div>
                     <div className="flex space-x-4">
                         <button
