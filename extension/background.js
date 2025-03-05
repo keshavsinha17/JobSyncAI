@@ -1,26 +1,16 @@
-// Listen for installation
-chrome.runtime.onInstalled.addListener(() => {
-  console.log('JobSyncAI extension installed');
-});
-
-// Handle authentication
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === 'authenticate') {
-    // Handle authentication with your backend
-    authenticateUser(request.token)
-      .then(response => {
-        chrome.storage.local.set({ token: response.token });
-        sendResponse({ success: true });
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "saveJob") {
+      fetch("http://localhost:3000/api/jobs/add", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${localStorage.getItem("token")}`
+          },
+          body: JSON.stringify(message.jobData)
       })
-      .catch(error => {
-        sendResponse({ success: false, error: error.message });
-      });
-    return true; // Will respond asynchronously
+      .then(response => response.json())
+      .then(data => sendResponse({ success: true, data }))
+      .catch(error => sendResponse({ success: false, error }));
+      return true;
   }
 });
-
-async function authenticateUser(token) {
-  // Implement your authentication logic here
-  // This should match your backend authentication
-  return { token };
-} 
