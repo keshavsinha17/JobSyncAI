@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Sidebar from './Components/Sidebar';
 // import Dashboard from './Components/Dashboard';
 import Login from './Components/Login';
@@ -20,73 +20,82 @@ const App = () => {
         }
 
         return (
-            <div className="min-h-screen flex">
+            <div className="min-h-screen flex overflow-hidden bg-gray-50">
                 <Sidebar userName={userInfo?.name || 'User'} />
-                {children}
+                {/* Add padding-left for mobile menu button */}
+                <div className="flex-1 overflow-y-auto relative md:pl-0 pl-16">
+                    {children}
+                </div>
             </div>
         );
     };
 
     return (
-        <Router>
-            <Routes>
-                {/* Public Routes */}
-                <Route 
-                    path="/login" 
-                    element={
-                        isAuthenticated ? 
-                        <Navigate to="/dashboard" replace /> : 
-                        <Login />
-                    } 
-                />
+        <Routes>
+            {/* Public Routes */}
+            <Route 
+                path="/login" 
+                element={
+                    isAuthenticated ? 
+                    <Navigate to="/dashboard" replace /> : 
+                    <Login />
+                } 
+            />
 
-                {/* Protected Routes */}
-                <Route 
-                    path="/dashboard" 
-                    element={
-                        <ProtectedLayout>
-                            <CentralDashboard userName={userInfo?.name || 'User'} />
-                        </ProtectedLayout>
-                    } 
-                />
-                <Route 
-                    path="/score" 
-                    element={
-                        <ProtectedLayout>
-                            <Score />
-                        </ProtectedLayout>
-                    } 
-                />
-                <Route 
-                    path="/stats" 
-                    element={
-                        <ProtectedLayout>
-                            <Stats />
-                        </ProtectedLayout>
-                    } 
-                />
-                <Route 
-                    path="/profile" 
-                    element={
-                        <ProtectedLayout>
-                            <Profile />
-                        </ProtectedLayout>
-                    } 
-                />
+            {/* Protected Routes */}
+            <Route 
+                path="/dashboard" 
+                element={
+                    <ProtectedLayout>
+                        <CentralDashboard userName={userInfo?.name || 'User'} />
+                    </ProtectedLayout>
+                } 
+            />
+            <Route 
+                path="/score" 
+                element={
+                    <ProtectedLayout>
+                        <Score />
+                    </ProtectedLayout>
+                } 
+            />
+            <Route 
+                path="/stats" 
+                element={
+                    <ProtectedLayout>
+                        <Stats />
+                    </ProtectedLayout>
+                } 
+            />
+            <Route 
+                path="/profile" 
+                element={
+                    <ProtectedLayout>
+                        <Profile />
+                    </ProtectedLayout>
+                } 
+            />
 
-                {/* Redirect root to dashboard */}
-                <Route 
-                    path="/" 
-                    element={<Navigate to="/dashboard" replace />} 
-                />
+            {/* Root Route */}
+            <Route 
+                path="/" 
+                element={
+                    isAuthenticated ? 
+                    <Navigate to="/dashboard" replace /> : 
+                    <Navigate to="/login" replace />
+                } 
+            />
 
-                {/* 404 Route */}
-                <Route 
-                    path="*" 
-                    element={<Navigate to="/dashboard" replace />} 
-                />
-            </Routes>
-        </Router>
+            {/* 404 Route */}
+            <Route 
+                path="*" 
+                element={
+                    isAuthenticated ? 
+                    <Navigate to="/dashboard" replace /> : 
+                    <Navigate to="/login" replace />
+                } 
+            />
+        </Routes>
     );
 };
 
