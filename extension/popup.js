@@ -16,29 +16,47 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         if (!validateForm()) return;
 
-        const jobData = {
-            title: document.getElementById("job-title").value,
-            company: document.getElementById("company").value,
-            description: document.getElementById("description").value,
-            salary: document.getElementById("salary").value,
-            link: window.location.href,
-            status: "pending"
-        };
-
-        // Save to storage before sending to backend
-        chrome.storage.local.set({ 'currentJobDetails': jobData });
+        const saveButton = document.getElementById("save-job");
+        saveButton.disabled = true;
+        saveButton.textContent = "Saving...";
 
         try {
+            const jobData = {
+                title: document.getElementById("job-title").value,
+                company: document.getElementById("company").value,
+                description: document.getElementById("description").value,
+                salary: document.getElementById("salary").value,
+                link: window.location.href,
+                status: "pending",
+                timestamp: new Date().toISOString()
+            };
+
+            // Save to storage before sending to backend
+            await chrome.storage.local.set({ 'currentJobDetails': jobData });
+
             const response = await saveJobToBackend(jobData);
-            if (response.success) {
-                alert("Job saved successfully!");
-                chrome.storage.local.remove('currentJobDetails');
-                window.close();
-            } else {
-                alert("Error saving job. Please try again.");
+            if (response) {
+                // Show success message
+                const successMessage = document.createElement('div');
+                successMessage.textContent = "Job saved successfully!";
+                successMessage.style.color = "green";
+                form.appendChild(successMessage);
+
+                // Clear the stored job details
+                await chrome.storage.local.remove('currentJobDetails');
+
+                // Close popup after delay
+                setTimeout(() => window.close(), 1500);
             }
         } catch (error) {
-            alert("Error connecting to server. Please try again.");
+            console.error('Error saving job:', error);
+            const errorMessage = document.createElement('div');
+            errorMessage.textContent = `Error: ${error.message || 'Failed to save job'}`;
+            errorMessage.style.color = "red";
+            form.appendChild(errorMessage);
+        } finally {
+            saveButton.disabled = false;
+            saveButton.textContent = "Save Job";
         }
     });
 });
@@ -69,15 +87,21 @@ function validateForm() {
 }
 
 async function saveJobToBackend(jobData) {
-    const response = await fetch("http://localhost:3000/api/jobs/add", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
-        },
-        body: JSON.stringify(jobData)
+    return new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage(
+            {
+                action: "saveJob",
+                jobData: jobData
+            },
+            response => {
+                if (response && response.success) {
+                    resolve(response.data);
+                } else {
+                    reject(response?.error || 'Failed to save job');
+                }
+            }
+        );
     });
-    return await response.json();
 }
 
 function getCurrentTabDetails() {

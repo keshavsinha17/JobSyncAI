@@ -11,6 +11,12 @@ const Login = ({ setIsAuthenticated }) => {
     const userInfo = localStorage.getItem("user-info");
     const token = localStorage.getItem("token");
     if (userInfo && token) {
+      // Share existing token with extension if user is already logged in
+      window.postMessage({
+        type: 'FROM_WEBPAGE',
+        action: 'AUTH_TOKEN',
+        token: token
+      }, '*');
       navigate("/dashboard", { replace: true });
     }
   }, [navigate]);
@@ -23,6 +29,13 @@ const Login = ({ setIsAuthenticated }) => {
           // Save both user info and token
           localStorage.setItem("user-info", JSON.stringify(result.user));
           localStorage.setItem("token", result.token);
+          
+          // Share token with extension
+          window.postMessage({
+            type: 'FROM_WEBPAGE',
+            action: 'AUTH_TOKEN',
+            token: result.token
+          }, '*');
           
           // Update authentication state
           setIsAuthenticated(true);
@@ -45,6 +58,21 @@ const Login = ({ setIsAuthenticated }) => {
     onError: (error) => console.error("Login Failed:", error),
     flow: "auth-code",
   });
+
+  const handleLogout = () => {
+    localStorage.removeItem("user-info");
+    localStorage.removeItem("token");
+    
+    // Notify extension about logout
+    window.postMessage({
+      type: 'FROM_WEBPAGE',
+      action: 'AUTH_TOKEN',
+      token: null
+    }, '*');
+    
+    setIsAuthenticated(false);
+    navigate("/login");
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">

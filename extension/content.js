@@ -268,3 +268,30 @@
         extractJobDetails();
   });
 })();
+
+window.addEventListener('message', function(event) {
+    // We only accept messages from ourselves
+    if (event.source != window) return;
+
+    if (event.data.type && event.data.type === 'FROM_WEBPAGE') {
+        if (event.data.action === 'AUTH_TOKEN') {
+            // Send token to background script
+            chrome.runtime.sendMessage({
+                action: 'SET_AUTH_TOKEN',
+                token: event.data.token
+            });
+        }
+    }
+}, false);
+
+// Inject the script into the page
+function injectScript() {
+    const script = document.createElement('script');
+    script.src = chrome.runtime.getURL('inject.js');
+    script.onload = function() {
+        this.remove();
+    };
+    (document.head || document.documentElement).appendChild(script);
+}
+
+injectScript();
