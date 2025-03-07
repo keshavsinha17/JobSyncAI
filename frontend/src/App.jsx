@@ -1,65 +1,93 @@
-import { useState, useEffect } from 'react'
-import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
-import Dashboard2 from './Components/Dashboard2'
-import Login from './Components/Login'
-import PageNotFound from './Pages/PageNotFound'
-import { GoogleOAuthProvider } from '@react-oauth/google'
-import RefreshHandler from './Components/RefreshHandler'
-import AddJob from './Components/AddJob'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Sidebar from './Components/Sidebar';
+// import Dashboard from './Components/Dashboard';
+import Login from './Components/Login';
+import Profile from './Components/Profile';
+import Stats from './Components/Stats';
+import Score from './Components/Score';
+import CentralDashboard from './Pages/CentralDashboard';
 
-function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+const App = () => {
+    // Get user info from localStorage
+    const userInfo = JSON.parse(localStorage.getItem('user-info'));
+    const isAuthenticated = !!localStorage.getItem('token');
 
-  useEffect(() => {
-    const userInfo = localStorage.getItem("user-info");
-    const token = localStorage.getItem("token");
-    setIsAuthenticated(!!(userInfo && token));
-    setIsLoading(false);
-  }, []);
+    // Protected Route wrapper component
+    const ProtectedLayout = ({ children }) => {
+        if (!isAuthenticated) {
+            return <Navigate to="/login" replace />;
+        }
 
-  const GoogleAuthWrapper = () => {
-    if (isAuthenticated) {
-      return <Navigate to="/dashboard" replace />;
-    }
+        return (
+            <div className="min-h-screen flex">
+                <Sidebar userName={userInfo?.name || 'User'} />
+                {children}
+            </div>
+        );
+    };
+
     return (
-      <GoogleOAuthProvider clientId="125166014448-09633mpn1l85bkv9f21meq1r0rl3qlnh.apps.googleusercontent.com">
-        <Login setIsAuthenticated={setIsAuthenticated} />
-      </GoogleOAuthProvider>
-    );
-  };
-  
-  const ProtectedRoute = ({ element }) => {
-    if (isLoading) {
-      return (
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-        </div>
-      );
-    }
-    return isAuthenticated ? element : <Navigate to="/login" replace />;
-  };
+        <Router>
+            <Routes>
+                {/* Public Routes */}
+                <Route 
+                    path="/login" 
+                    element={
+                        isAuthenticated ? 
+                        <Navigate to="/dashboard" replace /> : 
+                        <Login />
+                    } 
+                />
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
+                {/* Protected Routes */}
+                <Route 
+                    path="/dashboard" 
+                    element={
+                        <ProtectedLayout>
+                            <CentralDashboard userName={userInfo?.name || 'User'} />
+                        </ProtectedLayout>
+                    } 
+                />
+                <Route 
+                    path="/score" 
+                    element={
+                        <ProtectedLayout>
+                            <Score />
+                        </ProtectedLayout>
+                    } 
+                />
+                <Route 
+                    path="/stats" 
+                    element={
+                        <ProtectedLayout>
+                            <Stats />
+                        </ProtectedLayout>
+                    } 
+                />
+                <Route 
+                    path="/profile" 
+                    element={
+                        <ProtectedLayout>
+                            <Profile />
+                        </ProtectedLayout>
+                    } 
+                />
+
+                {/* Redirect root to dashboard */}
+                <Route 
+                    path="/" 
+                    element={<Navigate to="/dashboard" replace />} 
+                />
+
+                {/* 404 Route */}
+                <Route 
+                    path="*" 
+                    element={<Navigate to="/dashboard" replace />} 
+                />
+            </Routes>
+        </Router>
     );
-  }
-  
-  return (
-<BrowserRouter>
-      <RefreshHandler setIsAuthenticated={setIsAuthenticated}/>
-  <Routes>
-  <Route path="/login" element={<GoogleAuthWrapper />} />
-        <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />} />
-        <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard2 />} />} />
-        <Route path="/add-job" element={<ProtectedRoute element={<AddJob />} />} />
-        <Route path="*" element={<PageNotFound />} />
-  </Routes>
-</BrowserRouter>
-  );
-}
+};
 
 export default App;
