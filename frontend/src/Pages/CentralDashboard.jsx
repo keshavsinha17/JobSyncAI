@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import JobCard2 from '../Components/JobCard2';
 import JobModal from '../Components/JobModal';
 
 const CentralDashboard = ({ userName }) => {
+    const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
     const [selectedJob, setSelectedJob] = useState(null);
 
@@ -47,7 +49,10 @@ const CentralDashboard = ({ userName }) => {
             
             <div className="mb-6">
                 <div className="flex justify-between items-center w-full">
-                    <button className="bg-gray-900 text-white px-4 py-2 rounded-lg flex items-center hover:bg-gray-800 transition-colors">
+                    <button 
+                        onClick={() => navigate('/add-job')}
+                        className="bg-gray-900 text-white px-4 py-2 rounded-lg flex items-center hover:bg-gray-800 transition-colors"
+                    >
                         <i className="fas fa-plus mr-2"></i>
                         Add New Job
                     </button>

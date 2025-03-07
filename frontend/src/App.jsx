@@ -7,6 +7,7 @@ import Profile from './Components/Profile';
 import Stats from './Components/Stats';
 import Score from './Components/Score';
 import CentralDashboard from './Pages/CentralDashboard';
+import AddJob from './Components/AddJob';
 
 const App = () => {
     // Get user info from localStorage
@@ -48,6 +49,14 @@ const App = () => {
                 element={
                     <ProtectedLayout>
                         <CentralDashboard userName={userInfo?.name || 'User'} />
+                    </ProtectedLayout>
+                } 
+            />
+            <Route 
+                path="/add-job" 
+                element={
+                    <ProtectedLayout>
+                        <AddJob />
                     </ProtectedLayout>
                 } 
             />
