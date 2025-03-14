@@ -1,6 +1,6 @@
 import React from 'react';
 
-const JobCard2 = ({ job, onClick }) => {
+const JobCard2 = ({ job, onClick ,handleDelete}) => {
     const { title, company, salary, location, type, workMode, status, appliedDate } = job;
 
     return (
@@ -43,7 +43,7 @@ const JobCard2 = ({ job, onClick }) => {
                             e.stopPropagation();
                         }}
                     >
-                        <i className="fas fa-trash"></i>
+                        <i onClick={handleDelete} className="fas fa-trash"></i>
                     </button>
                 </div>
                 <div className="flex gap-2">

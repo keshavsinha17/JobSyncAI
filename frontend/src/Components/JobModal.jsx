@@ -1,6 +1,6 @@
 import React from 'react';
 
-const JobModal = ({ job, onClose }) => {
+const JobModal = ({ job, onClose , onUpdate, onDelete}) => {
     const { title, company, salary, location, description, requirements, status, appliedDate } = job;
 
     return (

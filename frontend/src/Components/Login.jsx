@@ -3,7 +3,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 import { googleAuth } from "../api.js";
 import { useNavigate } from "react-router-dom";
 
-const Login = ({ setIsAuthenticated }) => {
+const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,9 +37,6 @@ const Login = ({ setIsAuthenticated }) => {
             token: result.token
           }, '*');
           
-          // Update authentication state
-          setIsAuthenticated(true);
-          
           // Redirect to dashboard
           navigate("/dashboard", { replace: true });
         } else {
@@ -70,7 +67,6 @@ const Login = ({ setIsAuthenticated }) => {
       token: null
     }, '*');
     
-    setIsAuthenticated(false);
     navigate("/login");
   };
 

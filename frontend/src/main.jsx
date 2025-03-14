@@ -20,7 +20,7 @@ const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID; // Get this from your Go
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-        <GoogleOAuthProvider clientId={clientId}>
+        <GoogleOAuthProvider clientId='125166014448-09633mpn1l85bkv9f21meq1r0rl3qlnh.apps.googleusercontent.com'>
             <BrowserRouter>
                 <App />
             </BrowserRouter>
