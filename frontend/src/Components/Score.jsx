@@ -143,7 +143,15 @@ const Score = () => {
                                         </p>
                                     )}
                                 </div>
+                                
                             </div>
+                            <p className="text-gray-600 mt-2">Enter the Resume Text</p>
+                            <textarea 
+                                className="w-full border-gray-300 rounded-lg shadow-sm focus:border-custom focus:ring-custom h-32" 
+                                placeholder="Enter resume text"
+                                value={resumeText}
+                                onChange={(e) => setResumeText(e.target.value)}
+                            />
                         </div>
 
                         <button 
